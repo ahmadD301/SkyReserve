@@ -1,18 +1,45 @@
-﻿using Domain.Enums;
+﻿
 
-var flight = new Flight("QA123", "Doha", "Paris", DateTime.Now.AddHours(5));
-var seat = new Seat("A1", SeatClass.Economy);
-flight.AddSeat(seat);
+using Domain.Enums;
 
-var passenger = new Passenger("Alaa", "Eddin");
+var flightRepository = new InMemoryFlightRepository();
+var ticketRepository = new InMemoryTicketRepository(); 
+var paymentService = new FackePaymentService();
 
-seat.Book();
 
-var ticket = new Ticket(passenger, flight, seat, 500);
+var bookingService = new BookingService(flightRepository, paymentService, ticketRepository);
 
-Console.WriteLine(ticket.Status); // Confirmed
+var flight = new Flight("AB123", "New York", "Los Angeles", DateTime.Now.AddDays(1)); 
+flight.AddSeat(new Seat("1A", SeatClass.Economy));
+flight.AddSeat(new Seat("1B", SeatClass.Economy));
+flight.AddSeat(new Seat("1C", SeatClass.Economy));
+flight.AddSeat(new Seat("2A", SeatClass.Business));
+flight.AddSeat(new Seat("2B", SeatClass.Business));
 
-ticket.Cancel();
+IEnumerable<Flight> flights = new List<Flight> { flight };
+foreach (var f in flights)
+{
+    flightRepository.Add(f);
+}
 
-Console.WriteLine(ticket.Status); // Cancelled
-Console.WriteLine(seat.IsBooked); // False
+System.Console.WriteLine("Available flights:");
+
+foreach (var f in flightRepository.GetAll())
+{
+    System.Console.WriteLine($"{f.FlightNumber}: {f.Origin} to {f.Destination} at {f.DepartureTime}");
+}
+
+IEnumerable<Seat> availableSeats = flightRepository.GetAll()
+    .SelectMany(f => f.Seats)
+    .Where(s => s.IsBooked == false);
+
+System.Console.WriteLine("Available seats:");
+
+foreach (var s in availableSeats){
+    System.Console.WriteLine($"{s.SeatNumber} ({s.SeatClass})");
+}
+
+var passenger = new Passenger("John", "Doe");
+var ticket = await bookingService.BookTicketAsync("AB123", "1A", passenger, 500m);
+Console.WriteLine($"Ticket booked successfully for {ticket.Passenger.GetFullName()} on flight {ticket.Flight.FlightNumber}, seat {ticket.Seat.SeatNumber}.");
+
