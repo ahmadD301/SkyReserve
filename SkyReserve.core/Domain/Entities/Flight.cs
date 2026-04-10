@@ -41,6 +41,10 @@ public class Flight
         {
             throw new ArgumentNullException(nameof(seat), "Seat cannot be null.");
         }
+        if (_seats.Any(s => s.SeatNumber == seat.SeatNumber))
+        {
+            throw new ArgumentException($"Seat with number {seat.SeatNumber} already exists on this flight.", nameof(seat));
+        }
         _seats.Add(seat);
     }
     public Seat GetSeat(string seatNumber)
