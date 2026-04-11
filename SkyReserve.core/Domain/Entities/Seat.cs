@@ -15,6 +15,10 @@ public class Seat
         {
             throw new ArgumentException("Seat number cannot be null or empty.", nameof(seatNumber));
         }
+        if (!Enum.IsDefined(typeof(SeatClass), seatClass))
+        {
+            throw new ArgumentException("Invalid seat class.", nameof(seatClass));
+        }
         SeatNumber = seatNumber;
         SeatClass = seatClass;
         IsBooked = false;
