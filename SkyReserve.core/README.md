@@ -25,7 +25,7 @@ Practice **OOP, LINQ, Async/Await, Collections, Nullable Types, SOLID Principles
 
 ## Tech Stack & Concepts
 
-**.NET 10.0** | **C# 10+** | **Nullable Reference Types** | **Async/Await** | **LINQ** | **Generics** | **Dependency Injection**
+**.NET 10.0** | **C# 10+** | **Nullable Reference Types** | **Async/Await** | **LINQ** | **Generics** | **Dependency Injection** | **xUnit (Unit Testing)**
 
 **Patterns**: Repository • Service Layer • Factory • State Management  
 **Principles**: SOLID (Single Responsibility, Open/Closed, Liskov Substitution, Interface Segregation, Dependency Inversion)
@@ -33,19 +33,24 @@ Practice **OOP, LINQ, Async/Await, Collections, Nullable Types, SOLID Principles
 ## Project Structure
 
 ```
-PROJECT/
-├── Program.cs                          # Entry point with DI
-├── Domain/                             # Entities, Enums, Interfaces
-│   ├── Entities/                       # Flight, Passenger, Seat, Ticket
-│   ├── Enums/                          # FlightStatus, SeatClass, TicketStatus
-│   └── Interfaces/                     # Repository & service contracts
-├── Application/                        # Business logic layer
-│   └── Services/                       # BookingService, FlightService, PassengerService
-├── Infrastructure/                     # Implementation details
-│   ├── Repositories/                   # In-memory storage
-│   ├── Payment/                        # FakePaymentService
-│   └── Persistence/                    # Console helpers & menus
-└── Presentation/                       # UI layer (console)
+SkyReserve/
+├── SkyReserve.core/
+│   ├── Program.cs                      # Entry point with manual DI
+│   ├── Domain/                         # Entities, Enums, Interfaces
+│   │   ├── Entities/                   # Flight, Passenger, Seat, Ticket
+│   │   ├── Enums/                      # FlightStatus, SeatClass, TicketStatus
+│   │   └── Interfaces/                 # Repository & service contracts
+│   ├── Application/                    # Business logic layer
+│   │   ├── DTOs/                       # Request models
+│   │   ├── Extensions/                 # Mapping/helpers
+│   │   └── Services/                   # BookingService, FlightService, PassengerService
+│   └── Infrastructure/                 # Implementation details
+│       ├── Repositories/               # In-memory storage
+│       ├── Payment/                    # FakePaymentService
+│       └── Persistence/                # Console helpers & menus
+└── SkyReserve.Tests/                   # xUnit test project
+   ├── Application/Services/           # Service-layer tests
+   └── Domain/                         # Domain entity tests
 ```
 
 ## Getting Started
@@ -71,6 +76,16 @@ PROJECT/
    ```bash
    dotnet run
    ```
+
+### Unit Testing
+
+This project uses **xUnit** for automated unit tests in the **SkyReserve.Tests** project.
+
+Run tests with:
+
+```bash
+dotnet test
+```
 
 ## Usage
 
